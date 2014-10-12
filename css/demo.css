@@ -1,0 +1,11 @@
+.twocol-left {
+	float: left;
+	width: 47%;
+}
+.twocol-right {
+	float: right;
+	width: 47%;
+}
+.twocol-right ~ p {
+	clear: both;
+}
