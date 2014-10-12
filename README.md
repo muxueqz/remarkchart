@@ -2,6 +2,7 @@
 -
 
 [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
+[![Build Status](https://travis-ci.org/rsteube/remarkchart.svg?branch=master)](https://travis-ci.org/rsteube/remarkchart)
 
 Replaces tables in [remark] slideshows with charts from [Chart.js].
 
