@@ -178,7 +178,7 @@ function remarkchart() {
 	function readColorsFromTable(table) {
 		var customColors = defcolors.slice();
 
-		table.find("th").find("span").each(function(index, td) {
+		table.find("th span").each(function(index, td) {
 			$.each($(td).prop('class').split(' '), function(spanindex, myclass) {
 				var c = colors[myclass];
 				if ( typeof c !== "undefined") {
@@ -193,7 +193,7 @@ function remarkchart() {
 	function readColorsFromTable2D(table) {
 		var customColors = defcolors.slice();
 
-		table.find("tbody").find('tr td:first-child span').each(function(index, span) {
+		table.find('tbody tr td:first-child span').each(function(index, span) {
 			$.each($(span).prop('class').split(' '), function(spanindex, myclass) {
 				var c = colors[myclass];
 				if ( typeof c !== "undefined") {
