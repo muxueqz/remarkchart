@@ -16,6 +16,9 @@ module.exports = function(grunt) {
 				}
 			}
 		},
+		qunit : {
+			files : ['test/**/*.html']
+		},
 		uglify : {
 			options : {
 				banner : '/*! <%= pkg.name %> <%= pkg.version %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
@@ -30,20 +33,17 @@ module.exports = function(grunt) {
 				options : {
 					port : 8000,
 					base : '.',
-					keepalive :true
+					keepalive : true
 				}
 			}
 		}
 	});
 
-	// Load the plugin that provides the "jshint" task.
 	grunt.loadNpmTasks('grunt-contrib-jshint');
-	// Load the plugin that provides the "uglify" task.
+	grunt.loadNpmTasks('grunt-contrib-qunit');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
-	// Load the plugin that provides the "connect" task.
 	grunt.loadNpmTasks('grunt-contrib-connect');
 
-	// Default task(s).
-	grunt.registerTask('default', ['jshint', 'uglify']);
-
+	grunt.registerTask('default', ['jshint', 'qunit', 'uglify']);
+	grunt.registerTask('travis_ci', ['jshint', 'qunit']);
 };
