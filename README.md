@@ -5,11 +5,13 @@
 
 Replaces tables in [remark] slideshows with charts from [Chart.js].
 
+Check out the [demo](http://rsteube.github.io/remarkchart).
+
 ## Current state (WIP)
 All six charts can be generated, but lots of stuff not yet working.
 
 ## How does it work?
-Tables that shall be replaced by charts are tagged with css classes using [content-classes]. The content of the table is then read by remarkchart and replaced by the corresponding chart.
+Tables that shall be replaced by charts are tagged with css classes using [content-classes]. The content of the table is then read by remarkchart and replaced with the corresponding chart.
 
 ## Getting Started
 
