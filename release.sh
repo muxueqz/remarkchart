@@ -1,11 +1,18 @@
 #!/bin/bash
+set -e
+
 source ../credentials
 export GITHUB_USERNAME
 export GITHUB_PASSWORT
 
-grunt || exit 1
+# build
+grunt
+echo
 
-echo -n "execute 'grunt release:$1'? (type yes to confirm): "
+# dry run
+grunt "release:$1" --no-write
+
+echo -n "\nexecute 'grunt release:$1'? (type yes to confirm): "
 read -n3 answer
 
 if [ "$answer" == 'yes' ]; then
