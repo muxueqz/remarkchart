@@ -36,6 +36,16 @@ module.exports = function(grunt) {
 					keepalive : true
 				}
 			}
+		},
+		release : {
+			options : {
+				npm : false, //default: true
+				github : {
+					repo : 'rsteube/remarkchart',
+					usernameVar : 'GITHUB_USERNAME', //ENVIRONMENT VARIABLE that contains Github username
+					passwordVar : 'GITHUB_PASSWORD' //ENVIRONMENT VARIABLE that contains Github password
+				}
+			}
 		}
 	});
 
@@ -43,6 +53,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-qunit');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-connect');
+	grunt.loadNpmTasks('grunt-release');
 
 	grunt.registerTask('default', ['jshint', 'qunit', 'uglify']);
 	grunt.registerTask('travis_ci', ['jshint', 'qunit']);
