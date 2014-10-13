@@ -3,7 +3,7 @@ set -e
 
 source ../credentials
 export GITHUB_USERNAME
-export GITHUB_PASSWORT
+export GITHUB_PASSWORD
 
 # build
 grunt
