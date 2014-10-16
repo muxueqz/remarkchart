@@ -36,94 +36,67 @@ function remarkchart() {
 
 	var defcolors = [colors.butter, colors.orange, colors.chocolate, colors.chameleon, colors.skyblue, colors.plum, colors.scarletred, colors.aluminium];
 
-	function createDoughnut(tableDiv) {
+	function createChart(tableDiv, chartType) {
 		var table = $(tableDiv).find('table');
-		var data = createChartDataFromTable(table);
 
-		var canvas = $('<canvas>');
-		canvas.appendTo(tableDiv);
+		// Use the existing canvas on preview area if it exists.
+		var canvas = $(tableDiv).find('canvas:first');
+		if (canvas.length === 0) {
+			canvas = $('<canvas>');
+			canvas.appendTo(tableDiv);
+		}
 
 		var ctx = canvas.get(0).getContext("2d");
-		var myDoughnut = new Chart(ctx).Doughnut(data, {
-			animation : false,
-			responsive : true
-		});
+
+		var chart;
+		var data;
+		switch(chartType) {
+		case 'chart-doughnut':
+			data = createChartDataFromTable(table);
+			chart = new Chart(ctx).Doughnut(data, {
+				animation : false,
+				responsive : true
+			});
+			break;
+		case 'chart-pie':
+			data = createChartDataFromTable(table);
+			chart = new Chart(ctx).Pie(data, {
+				animation : false,
+				responsive : true
+			});
+			break;
+		case 'chart-bar':
+			data = createChartDataFromTable2D(table);
+			chart = new Chart(ctx).Bar(data, {
+				animation : false,
+				responsive : true
+			});
+			break;
+		case 'chart-line':
+			data = createChartDataFromTable2D(table);
+			chart = new Chart(ctx).Line(data, {
+				animation : false,
+				responsive : true
+			});
+			break;
+		case 'chart-radar':
+			data = createChartDataFromTable2D(table);
+			chart = new Chart(ctx).Radar(data, {
+				animation : false,
+				responsive : true
+			});
+			break;
+		case 'chart-polararea':
+			data = createChartDataFromTable(table);
+			chart = new Chart(ctx).PolarArea(data, {
+				animation : false,
+				responsive : true
+			});
+			break;
+		}
+
 		table.hide();
-	}
-
-	function createPie(tableDiv) {
-		var table = $(tableDiv).find('table');
-		var data = createChartDataFromTable(table);
-
-		var canvas = $('<canvas>');
-		canvas.appendTo(tableDiv);
-
-		var ctx = canvas.get(0).getContext("2d");
-		var myDoughnut = new Chart(ctx).Pie(data, {
-			animation : false,
-			responsive : true
-		});
-		table.hide();
-	}
-
-	function createBar(tableDiv) {
-		var table = $(tableDiv).find('table');
-		var data = createChartDataFromTable2D(table);
-
-		var canvas = $('<canvas>');
-		canvas.appendTo(tableDiv);
-
-		var ctx = canvas.get(0).getContext("2d");
-		var myDoughnut = new Chart(ctx).Bar(data, {
-			animation : false,
-			responsive : true
-		});
-		table.hide();
-	}
-
-	function createLine(tableDiv) {
-		var table = $(tableDiv).find('table');
-		var data = createChartDataFromTable2D(table);
-
-		var canvas = $('<canvas>');
-		canvas.appendTo(tableDiv);
-
-		var ctx = canvas.get(0).getContext("2d");
-		var myDoughnut = new Chart(ctx).Line(data, {
-			animation : false,
-			responsive : true
-		});
-		table.hide();
-	}
-
-	function createRadar(tableDiv) {
-		var table = $(tableDiv).find('table');
-		var data = createChartDataFromTable2D(table);
-
-		var canvas = $('<canvas>');
-		canvas.appendTo(tableDiv);
-
-		var ctx = canvas.get(0).getContext("2d");
-		var myDoughnut = new Chart(ctx).Radar(data, {
-			animation : false,
-			responsive : true
-		});
-		table.hide();
-	}
-
-	function createPolarArea(tableDiv) {
-		var table = $(tableDiv).find('table');
-		var data = createChartDataFromTable(table);
-
-		var canvas = $('<canvas>');
-		canvas.appendTo(tableDiv);
-
-		var ctx = canvas.get(0).getContext("2d");
-		var myDoughnut = new Chart(ctx).PolarArea(data, {
-			animation : false,
-			responsive : true
-		});
-		table.hide();
+		$(tableDiv).data('chart', chart);
 	}
 
 	function createChartDataFromTable(table) {
@@ -205,6 +178,7 @@ function remarkchart() {
 		return customColors;
 	}
 
+
 	this.init = function(slideshow, options) {
 		slideshow.on('afterShowSlide', function(slide) {
 			initVisibleSlide();
@@ -212,29 +186,40 @@ function remarkchart() {
 		initVisibleSlide();
 	};
 
+	function getChartType(element) {
+		var chartTypes = ['chart-doughnut', 'chart-pie', 'chart-bar', 'chart-polararea', 'chart-line', 'chart-radar'];
+		var classList = $(element).attr('class').split(/\s+/);
+
+		for (var i = 0; i < classList.length; i++) {
+			if (chartTypes.indexOf(classList[i]) != -1) {
+				return classList[i];
+			}
+		}
+	}
+
 	function initVisibleSlide() {
+		var visibleSlides = '.remark-visible, .remark-presenter-mode .remark-preview-area';
 		var anyChart = '.chart-doughnut, .chart-pie, .chart-bar, .chart-polararea, .chart-line, .chart-radar';
-		$('.remark-visible').find(anyChart).each(function(index, tableDiv) {
+		$(visibleSlides).find(anyChart).each(function(index, tableDiv) {
 			var jTableDiv = $(tableDiv);
 
 			if (!jTableDiv.hasClass('chart-initialized')) {
-				if (jTableDiv.hasClass('chart-doughnut')) {
-					createDoughnut(jTableDiv);
-				} else if (jTableDiv.hasClass('chart-pie')) {
-					createPie(jTableDiv);
-				} else if (jTableDiv.hasClass('chart-bar')) {
-					createBar(jTableDiv);
-				} else if (jTableDiv.hasClass('chart-polararea')) {
-					createPolarArea(jTableDiv);
-				} else if (jTableDiv.hasClass('chart-line')) {
-					createLine(jTableDiv);
-				} else if (jTableDiv.hasClass('chart-radar')) {
-					createRadar(jTableDiv);
-				}
+				var chartType = getChartType(tableDiv);
+				createChart(tableDiv, chartType);
 				jTableDiv.toggleClass("chart-initialized", true);
 			}
+
+		});
+
+		$('.remark-presenter-mode .remark-preview-area').find(anyChart).each(function(index, tableDiv) {
+			// Seems the preview area is a copy of the slide dom tree which might have the chart canvas
+			// and 'chart-initialized' class, but never the javascript to draw the chart.
+			// Thus the chart always has to be recreated here.
+			var chartType = getChartType(tableDiv);
+			createChart(tableDiv, chartType);
 		});
 	}
+
 }
 
 window.remarkchart = new remarkchart();
