@@ -1,6 +1,6 @@
 {
   "name": "remarkchart",
-  "version": "0.1.0-0",
+  "version": "0.1.0-1",
   "dependencies": {
     "chart.js": "~1.0.1-beta.2",
     "jquery": "~1.11.1",
