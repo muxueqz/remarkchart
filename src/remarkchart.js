@@ -10,6 +10,29 @@ function remarkchart() {
 		'aluminium' : createColor('#555753', '#888a85')
 	};
 
+	var defcolors = [colors.butter, colors.orange, colors.chocolate, colors.chameleon, colors.skyblue, colors.plum, colors.scarletred, colors.aluminium];
+
+	var isMobile = {
+		Android : function() {
+			return navigator.userAgent.match(/Android/i);
+		},
+		BlackBerry : function() {
+			return navigator.userAgent.match(/BlackBerry/i);
+		},
+		iOS : function() {
+			return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+		},
+		Opera : function() {
+			return navigator.userAgent.match(/Opera Mini/i);
+		},
+		Windows : function() {
+			return navigator.userAgent.match(/IEMobile/i);
+		},
+		any : function() {
+			return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+		}
+	};
+
 	function hexToRGBA(hex, alpha) {
 		var result = 'rgba(_r, _g, _b, _a)';
 		result = result.replace('_r', parseInt(hex.substr(1, 2), 16));
@@ -34,8 +57,6 @@ function remarkchart() {
 		};
 	}
 
-	var defcolors = [colors.butter, colors.orange, colors.chocolate, colors.chameleon, colors.skyblue, colors.plum, colors.scarletred, colors.aluminium];
-
 	function createChart(tableDiv, chartType) {
 		var table = $(tableDiv).find('table');
 
@@ -53,45 +74,27 @@ function remarkchart() {
 		switch(chartType) {
 		case 'chart-doughnut':
 			data = createChartDataFromTable(table);
-			chart = new Chart(ctx).Doughnut(data, {
-				animation : false,
-				responsive : true
-			});
+			chart = new Chart(ctx).Doughnut(data);
 			break;
 		case 'chart-pie':
 			data = createChartDataFromTable(table);
-			chart = new Chart(ctx).Pie(data, {
-				animation : false,
-				responsive : true
-			});
+			chart = new Chart(ctx).Pie(data);
 			break;
 		case 'chart-bar':
 			data = createChartDataFromTable2D(table);
-			chart = new Chart(ctx).Bar(data, {
-				animation : false,
-				responsive : true
-			});
+			chart = new Chart(ctx).Bar(data);
 			break;
 		case 'chart-line':
 			data = createChartDataFromTable2D(table);
-			chart = new Chart(ctx).Line(data, {
-				animation : false,
-				responsive : true
-			});
+			chart = new Chart(ctx).Line(data);
 			break;
 		case 'chart-radar':
 			data = createChartDataFromTable2D(table);
-			chart = new Chart(ctx).Radar(data, {
-				animation : false,
-				responsive : true
-			});
+			chart = new Chart(ctx).Radar(data);
 			break;
 		case 'chart-polararea':
 			data = createChartDataFromTable(table);
-			chart = new Chart(ctx).PolarArea(data, {
-				animation : false,
-				responsive : true
-			});
+			chart = new Chart(ctx).PolarArea(data);
 			break;
 		}
 
@@ -178,13 +181,22 @@ function remarkchart() {
 		return customColors;
 	}
 
-
 	this.init = function(slideshow, options) {
+		setGlobalConfig();
 		slideshow.on('afterShowSlide', function(slide) {
 			initVisibleSlide();
 		});
 		initVisibleSlide();
 	};
+
+	function setGlobalConfig() {
+		var globalConfig = {
+			showTooltips : !isMobile.any(),
+			animation : false,
+			responsive : true
+		};
+		$.extend(Chart.defaults.global, globalConfig);
+	}
 
 	function getChartType(element) {
 		var chartTypes = ['chart-doughnut', 'chart-pie', 'chart-bar', 'chart-polararea', 'chart-line', 'chart-radar'];
