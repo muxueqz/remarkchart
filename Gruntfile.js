@@ -19,18 +19,24 @@ module.exports = function(grunt) {
 		qunit : {
 			files : ['test/**/*.html']
 		},
+		concat : {
+			build : {
+				src : ['src/**/*.js'],
+				dest : 'build/<%= pkg.name %>.js',
+			},
+		},
 		uglify : {
 			options : {
 				banner : '/*! <%= pkg.name %> <%= pkg.version %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
 			},
 			build : {
-				src : 'src/<%= pkg.name %>.js',
+				src : 'build/<%= pkg.name %>.js',
 				dest : 'build/<%= pkg.name %>.min.js'
 			}
 		},
 		jsdoc2md : {
 			oneOutputFile : {
-				src : "src/*.js",
+				src : "src/**/*.js",
 				dest : "api/documentation.md"
 			}
 		},
@@ -57,11 +63,12 @@ module.exports = function(grunt) {
 
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-qunit');
+	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-connect');
 	grunt.loadNpmTasks("grunt-jsdoc-to-markdown");
 	grunt.loadNpmTasks('grunt-release');
 
-	grunt.registerTask('default', ['jshint', 'qunit', 'uglify', 'jsdoc2md']);
+	grunt.registerTask('default', ['jshint', 'qunit', 'concat', 'uglify', 'jsdoc2md']);
 	grunt.registerTask('travis_ci', ['jshint', 'qunit']);
 };
