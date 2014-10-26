@@ -28,6 +28,12 @@ module.exports = function(grunt) {
 				dest : 'build/<%= pkg.name %>.min.js'
 			}
 		},
+		jsdoc2md : {
+			oneOutputFile : {
+				src : "src/*.js",
+				dest : "api/documentation.md"
+			}
+		},
 		connect : {
 			server : {
 				options : {
@@ -53,8 +59,9 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-qunit');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-connect');
+	grunt.loadNpmTasks("grunt-jsdoc-to-markdown");
 	grunt.loadNpmTasks('grunt-release');
 
-	grunt.registerTask('default', ['jshint', 'qunit', 'uglify']);
+	grunt.registerTask('default', ['jshint', 'qunit', 'uglify', 'jsdoc2md']);
 	grunt.registerTask('travis_ci', ['jshint', 'qunit']);
 };
